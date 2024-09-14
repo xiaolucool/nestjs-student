@@ -20,8 +20,9 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    // 根据id查询用户
     const user = this.userService.findOne(+id)
-    if (user) {
+    if (!user) {
       throw new HttpException('用户不存在', HttpStatus.NOT_FOUND)
     } else {
       return user

@@ -22,23 +22,24 @@ export class UserService {
     return userWithoutPassword
   }
 
-  findAll() {
+  async findAll() {
     // 查询所有用户
-    return this.usersRepository.find();
+    return await this.usersRepository.find();
   }
 
-  findOne(id: number) {
-    const user = this.usersRepository.findOneBy({ id })
+  async findOne(id: number) {
+    // 根据id查询用户
+    const user = await this.usersRepository.findOneBy({ id })
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    const user =  this.usersRepository.update(id, updateUserDto) // 更新
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.usersRepository.update(id, updateUserDto) // 更新
     return user;
   }
 
-  remove(id: number) {
-    const user = this.usersRepository.delete(id)
+  async remove(id: number) {
+    const user = await this.usersRepository.delete(id)
     return user;
   }
 }
