@@ -5,8 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { hash, verify } from '../utils/md5'
-import { JwtService } from '@nestjs/jwt';
-import { log } from 'console';
+import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class UserService {
