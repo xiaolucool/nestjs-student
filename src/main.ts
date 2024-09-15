@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { Response } from './common/response'
 import { HttpFilter } from './common/filter'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+import { UserGuard } from './user/user.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

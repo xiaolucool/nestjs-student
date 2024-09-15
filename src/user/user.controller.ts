@@ -1,18 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, UseGuards, HttpCode } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserGuard } from './user.guard';
+import { Public } from 'src/public/public.decorator';
 
 @Controller('user')
 @ApiTags('用户') // 标记路由
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
+  @Public()
   @Post()
   @ApiOperation({ summary: '创建用户' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Public()
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: '用户登录' })
+  login(@Body() body: CreateUserDto) {
+    return this.userService.login(body)
   }
 
   @Get()
@@ -27,11 +38,7 @@ export class UserController {
   findOne(@Param('id') id: string) {
     // 根据id查询用户
     const user = this.userService.findOne(+id)
-    if (!user) {
-      throw new HttpException('用户不存在', HttpStatus.NOT_FOUND)
-    } else {
-      return user
-    }
+    return user
   }
 
   @Patch(':id')

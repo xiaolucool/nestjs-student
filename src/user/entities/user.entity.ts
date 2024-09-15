@@ -10,7 +10,6 @@ export class User {
     username: string;
 
     // @Column({ length: 20, nullable: false, select: false }) // 列：必填 长度20  默认非空 不显示
-    // 密码不返回
     @Column({ select: false })
     password: string;
 

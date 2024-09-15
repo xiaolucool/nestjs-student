@@ -1,9 +1,11 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { Module } from '@nestjs/common'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { UserModule } from './user/user.module'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { ConfigModule } from '@nestjs/config'
+import { JwtModule } from '@nestjs/jwt'
+import { UserGuard } from './user/user.guard'
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -25,8 +27,19 @@ import { ConfigModule } from '@nestjs/config';
     envFilePath: `.env`,
     // 使配置服务在所有模块中可用
     isGlobal: true,
+  }), JwtModule.registerAsync({
+    global:true, // 是否全局注册模块
+    useFactory: async () => {
+      return {
+        secret: process.env.JWT_SECRET, // 密钥
+        signOptions: { expiresIn: process.env.JWT_EXP }, // 过期时间
+      }
+    }
   }), UserModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: 'APP_GUARD',
+    useClass: UserGuard
+  }],
 })
 export class AppModule { }

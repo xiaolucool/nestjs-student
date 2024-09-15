@@ -4,7 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { hash, verify } from '../utils/md5';
+import { hash, verify } from '../utils/md5'
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -12,6 +13,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private jwtService: JwtService,
   ) { }
   async create(createUserDto: CreateUserDto) {
     // 对密码进行加密
@@ -22,6 +24,18 @@ export class UserService {
     return userWithoutPassword
   }
 
+  // 登录
+  async login(loginDto: CreateUserDto) {
+    const { username, password } = loginDto
+    const user = await this.findByUsername(username)
+    if (!user) return '用户不存在'
+    if (!verify(password, user.password, process.env.MD5_SALT)) {
+      return '密码错误'
+    }
+    const payload = { username: user.username, id: user.id };
+    return await this.jwtService.signAsync(payload);
+  }
+
   async findAll() {
     // 查询所有用户
     return await this.usersRepository.find();
@@ -30,7 +44,18 @@ export class UserService {
   async findOne(id: number) {
     // 根据id查询用户
     const user = await this.usersRepository.findOneBy({ id })
-    return user;
+    if (!user)
+      return false
+    return user
+  }
+  // 根据用户名查询用户
+  async findByUsername(username: string) {
+    // const user = await this.usersRepository.findOneBy({ username })
+    const user = await this.usersRepository.findOne({
+      where: { username },
+      select: ['id', 'username', 'password']
+    })
+    return user
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
