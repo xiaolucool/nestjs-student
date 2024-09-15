@@ -15,7 +15,6 @@ async function bootstrap() {
     .setDescription('Nestjs API 学习文档') // 文档描述
     .setVersion('1.0') // 文档版本
     .addBearerAuth() // 添加认证
-    .setBasePath('api/v1') // 设置基础路径
     .build() // 生成文档配置
   // 创建 Swagger 文档
   const document = SwaggerModule.createDocument(app, options)

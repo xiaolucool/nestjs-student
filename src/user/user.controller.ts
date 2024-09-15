@@ -10,7 +10,9 @@ import { User } from './user.decorator';
 @Controller('user')
 @ApiTags('用户') // 标记路由
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(
+    private readonly userService: UserService
+  ) { }
 
   @Public()
   @Post()
