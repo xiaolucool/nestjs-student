@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserGuard } from './user.guard';
 import { Public } from 'src/public/public.decorator';
+import { User } from './user.decorator';
 
 @Controller('user')
 @ApiTags('用户') // 标记路由
@@ -24,6 +25,14 @@ export class UserController {
   @ApiOperation({ summary: '用户登录' })
   login(@Body() body: CreateUserDto) {
     return this.userService.login(body)
+  }
+
+  // 修改密码
+  @Post('updatePassword')
+  @ApiOperation({ summary: '修改密码' })
+  updatePassword(@User('id') id: string, @Body() body: { oldPassword: string, newPassword: string }) {
+    return id
+    // return this.userService.updatePassword(body)
   }
 
   @Get()
