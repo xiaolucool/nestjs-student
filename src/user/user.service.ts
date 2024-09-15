@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { hash, verify } from '../utils/md5'
 import { JwtService } from '@nestjs/jwt';
+import { log } from 'console';
 
 @Injectable()
 export class UserService {
@@ -36,6 +37,22 @@ export class UserService {
     return await this.jwtService.signAsync(payload);
   }
 
+  // 修改密码
+  async updatePassword(id: number, body: { oldPassword: string, newPassword: string }) {
+    // 根据id查询用户
+    const user: CreateUserDto = await this.findOne(id)
+    console.log(user.password)
+    // 对比密码
+    if (!verify(body.oldPassword, user.password, process.env.MD5_SALT)) return '原密码错误'
+    // 对密码进行加密
+    const password = hash(body.newPassword, process.env.MD5_SALT)
+    // 更新密码
+    await this.usersRepository.update(id, { password })
+    return {
+      message: '修改成功',
+    }
+  }
+
   async findAll() {
     // 查询所有用户
     return await this.usersRepository.find();
@@ -43,9 +60,10 @@ export class UserService {
 
   async findOne(id: number) {
     // 根据id查询用户
-    const user = await this.usersRepository.findOneBy({ id })
-    if (!user)
-      return false
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      select: ['id', 'username', 'password']
+    })
     return user
   }
   // 根据用户名查询用户

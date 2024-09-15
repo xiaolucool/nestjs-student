@@ -30,9 +30,8 @@ export class UserController {
   // 修改密码
   @Post('updatePassword')
   @ApiOperation({ summary: '修改密码' })
-  updatePassword(@User('id') id: string, @Body() body: { oldPassword: string, newPassword: string }) {
-    return id
-    // return this.userService.updatePassword(body)
+  updatePassword(@User('id') id: number, @Body() body: { oldPassword: string, newPassword: string }) {
+    return this.userService.updatePassword(id, body)
   }
 
   @Get()
