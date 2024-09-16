@@ -18,8 +18,10 @@ async function bootstrap() {
     .build() // 生成文档配置
   // 创建 Swagger 文档
   const document = SwaggerModule.createDocument(app, options)
-  // 挂载 Swagger 文档到 /api-docs 路由
-  SwaggerModule.setup('/api-docs', app, document)
+  // 挂载 Swagger 文档到 /api-docs 路由，并提供 JSON 文档的链接
+  SwaggerModule.setup('api-docs', app, document, {
+    jsonDocumentUrl: 'api-docs-json', // 提供 JSON 文档的 URL
+  });
   // 响应拦截器
   app.useGlobalInterceptors(new Response())
   // 错误过滤器
