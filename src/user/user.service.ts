@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { hash, verify } from '../utils/md5'
 import { JwtService } from '@nestjs/jwt'
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class UserService {
@@ -25,7 +26,7 @@ export class UserService {
   }
 
   // 登录
-  async login(loginDto: CreateUserDto) {
+  async login(loginDto: LoginUserDto) {
     const { username, password } = loginDto
     const user = await this.findByUsername(username)
     if (!user) return '用户不存在'

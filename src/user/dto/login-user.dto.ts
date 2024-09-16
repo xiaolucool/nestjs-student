@@ -1,8 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, Matches, MaxLength, MinLength } from "class-validator";
-
-export class CreateUserDto {
-    id?: number;
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, Matches, MaxLength, MinLength } from 'class-validator';
+export class LoginUserDto {
     @IsNotEmpty({
         message: '用户名不能为空'
     })
@@ -41,9 +39,4 @@ export class CreateUserDto {
         description: '密码'
     })
     password: string;
-    @ApiProperty({
-        example: 18,
-        description: '年龄'
-    })
-    age: number;
 }

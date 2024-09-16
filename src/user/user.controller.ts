@@ -6,6 +6,7 @@ import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserGuard } from './user.guard';
 import { Public } from 'src/public/public.decorator';
 import { User } from './user.decorator';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('user')
 @ApiTags('用户') // 标记路由
@@ -25,7 +26,7 @@ export class UserController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: '用户登录' })
-  login(@Body() body: CreateUserDto) {
+  login(@Body() body: LoginUserDto) {
     return this.userService.login(body)
   }
 

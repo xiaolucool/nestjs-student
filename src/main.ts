@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { Response } from './common/response'
 import { HttpFilter } from './common/filter'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
-import { UserGuard } from './user/user.guard';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -24,6 +24,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new Response())
   // 错误过滤器
   app.useGlobalFilters(new HttpFilter())
+  // 参数校验
+  app.useGlobalPipes(new ValidationPipe())
   await app.listen(process.env.APP_PORT);
 }
 bootstrap();

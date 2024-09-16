@@ -12,11 +12,15 @@ export class HttpFilter implements ExceptionFilter {
 
         const status = exception.getStatus()
 
+         // 提取错误消息数组
+         const errors = exception.getResponse()['message'] || [];
+
         response.status(status).json({
             success: false,
             // time: Date.now(),
             timestamp: new Date().toLocaleString(),
             // data: exception,
+            errors,
             message: exception.message || '服务器错误',
             code: status,
             path: request.url,
